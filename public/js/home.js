@@ -22,13 +22,16 @@ $(document).ready(function () {
             },
         })
         .done(function (locations) {
-            for (i = 0; i < locations.length; i++) {
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(locations[i]['latitude'], locations[i]['longitude']),
-                    title: locations[i]['name'],
-                    map: map
-                });
-            }
+        	if(locations){
+        		for (i = 0; i < locations.length; i++) {
+	                var marker = new google.maps.Marker({
+	                    position: new google.maps.LatLng(locations[i]['latitude'], locations[i]['longitude']),
+	                    title: locations[i]['name'],
+	                    map: map
+	                });
+	            }
+        	}
+        	$('#map').show();
         })
         .fail(function (xhr) {
             console.log(xhr);
