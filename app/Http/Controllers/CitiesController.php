@@ -21,6 +21,6 @@ class CitiesController extends Controller
 	    ->limit(20)
 	    ->get();
 
-	    return response()->json($nearCities)
+	    return response()->json($nearCities);
     }
 }

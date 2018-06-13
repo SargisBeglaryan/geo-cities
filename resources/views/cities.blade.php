@@ -14,17 +14,22 @@
 @endsection
 
 @section('content')
-    <div class="container">
-    	<div class="col-sm-12 margin-xs">
+	<div class="container">
+		<div class="col-sm-12 margin-xs">
 			<select class="form-control selectpicker" id="select-country" data-live-search="true">
 				<option data-tokens="china">China</option>
 				<option data-tokens="malayasia">Malayasia</option>
 				<option data-tokens="singapore">Singapore</option>
 			</select>
-        </div>
-    </div>
+		</div>
+		<div class="col-sm-12">
+			<div id="map"></div>
+		</div>
+	</div>
 @endsection
 
 @section('script')
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgBy_DHNpUMeEMYPlN7hrtpzCNZQ8sFDI&libraries=places"
+        async defer></script>
     <script src="{{asset('js/home.js')}}"></script>
 @endsection
