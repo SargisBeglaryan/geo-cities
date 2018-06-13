@@ -14,7 +14,7 @@ class CreateCitiesTable extends Migration
     public function up()
     {
         Schema::create('cities', function (Blueprint $table) {
-            $table->increments('id')
+            $table->increments('id');
             $table->string('name', 200);
             $table->string('asciiname', 200)->nullable();
             $table->string('alternatenames', 200)->nullable();
@@ -34,7 +34,6 @@ class CreateCitiesTable extends Migration
             //dem               : digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat.
             $table->string('timezone', 40);
             $table->date('date');
-            $table->timestamp();
         });
     }
 

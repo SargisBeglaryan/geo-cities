@@ -17,9 +17,9 @@
 	<div class="container">
 		<div class="col-sm-12 margin-xs">
 			<select class="form-control selectpicker" id="select-country" data-live-search="true">
-				<option data-tokens="china">China</option>
-				<option data-tokens="malayasia">Malayasia</option>
-				<option data-tokens="singapore">Singapore</option>
+				@foreach($allCities as $cities)
+				<option data-longitude="{{ $cities->longitude }}" data-latitude="{{ $cities->latitude }}" data-tokens="{{ $cities->name }}">{{ $cities->name }}</option>
+				@endforeach
 			</select>
 		</div>
 		<div class="col-sm-12">
