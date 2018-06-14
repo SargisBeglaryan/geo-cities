@@ -2,9 +2,10 @@ $(document).ready(function () {
     $('#select-country').on('change', function () {
         var latitude = $(this).find(':selected').data('latitude');
         var longitude = $(this).find(':selected').data('longitude');
+        var cityId = $(this).find(':selected').data('id');
         var cityName = $(this).val();
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
+            zoom: 10,
             center: new google.maps.LatLng(parseFloat(latitude), parseFloat(longitude)),
         });
 
@@ -17,6 +18,7 @@ $(document).ready(function () {
             dataType: 'json',
             data: {
                 cityName: cityName,
+                cityId: cityId,
                 latitude: latitude,
                 longitude: longitude
             },

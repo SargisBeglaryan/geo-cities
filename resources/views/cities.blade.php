@@ -9,16 +9,17 @@
 @section('head')
  	<link rel="stylesheet" href="{{asset('css/home.css')}}" type="text/css">
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 @endsection
 
 @section('content')
 	<div class="container">
 		<div class="col-sm-12 margin-xs">
 			<select class="form-control selectpicker" id="select-country" data-live-search="true">
+				<option selected disabled >Choose your city</option>
 				@foreach($allCities as $cities)
-				<option data-longitude="{{ $cities->longitude }}" data-latitude="{{ $cities->latitude }}" data-tokens="{{ $cities->name }}">{{ $cities->name }}</option>
+				<option data-longitude="{{ $cities->longitude }}" data-id="{{ $cities->id }}" data-latitude="{{ $cities->latitude }}" data-tokens="{{ $cities->name }}">{{ $cities->name }}</option>
 				@endforeach
 			</select>
 		</div>
