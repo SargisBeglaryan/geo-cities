@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        '\Service\Console\Commands\SendWelcomeEmailCommand'
+        '\Service\Console\Commands\UpdateCitiesCommand'
     ];
 
     /**

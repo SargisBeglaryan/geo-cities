@@ -38,25 +38,62 @@ class CitiesController extends Controller
 		    echo "failed to copy ...";
 		}
 		$zip = Zip::open($newfile);
-		$citiesFile = '';
 		if ($zip) {
+			$lastCityId = Cities::select('id')->orderBy('id', 'desc')->first();
 		 	$zip->extract(public_path(), 'RU.txt');
 		 	ini_set('memory_limit', '-1');
 		 	ini_set('max_execution_time', 1500);
 			$file = fopen(public_path('RU.txt'), "r");
-			while(!feof($file)){
-				$oneLine = fgets($file);
-				$citiesData = explode("\t",$oneLine);
-				$citiesData[18] = substr($citiesData[18], 0, -1);
-				Cities::insert([
-					'id'=> $citiesData[0], 'name' => $citiesData[1],
-					'latitude'=> $citiesData[4], 'longitude' => $citiesData[5],
-					'country_code' => $citiesData[8], 'timezone' => $citiesData[17],
-					'date' => $citiesData[18]
-					]);
+			$cursor = -1;
+			fseek($file, $cursor, SEEK_END);
+			$char = fgetc($file);
+			$lastLine = '';
+			while ($char === "\n" || $char === "\r") {
+			    fseek($file, $cursor--, SEEK_END);
+			    $char = fgetc($file);
 			}
-			unlink(public_path('RU.txt'));
-			unlink(public_path($newfile));
+
+			while ($char !== false && $char !== "\n" && $char !== "\r") {
+			    $lastLine = $char . $lastLine;
+			    fseek($file, $cursor--, SEEK_END);
+			    $char = fgetc($file);
+			}
+			$checkLastCity =explode("\t",$lastLine);
+			if (!isset($lastCityId) || $checkLastCity[0] != $lastCityId->id) {
+				$file = fopen(public_path('RU.txt'), "r");
+				while (!feof($file)) {
+					$oneLine = fgets($file);
+					$citiesData = explode("\t",$oneLine);
+					$citiesData[18] = substr($citiesData[18], 0, -1);
+					Cities::firstOrCreate([
+						'id'=> $citiesData[0],
+						'name' => $citiesData[1],
+						'asciiname' => $citiesData[2],
+						'alternatenames' => $citiesData[3],
+						'latitude'=> $citiesData[4],
+						'longitude' => $citiesData[5],
+						'feature' => $citiesData[6],
+						'feature_code' => $citiesData[7],
+						'country_code' => $citiesData[8],
+						'country_code_2' => $citiesData[9],
+						'admin1' => $citiesData[10],
+						'admin2' => $citiesData[11],
+						'admin3' => $citiesData[12],
+						'admin4' => $citiesData[13],
+						'population' => intval($citiesData[14]),
+						'elevation' => intval($citiesData [15]),
+						'dem' => $citiesData [16],
+						'timezone' => $citiesData[17],
+						'date' => $citiesData[18]
+					]);
+				}
+			}
+			if (is_file(public_path('RU.txt'))) {
+                @unlink(public_path('RU.txt'));
+            }
+            if (is_file(public_path($newfile))) {
+                @unlink(public_path($newfile));
+            }
 			fclose($file);
 		    $zip->close();
 		 }
