@@ -1,3 +1,12 @@
+$(document).mouseup(function(e) {
+
+    var citiesListContent = $('#allCountriesList');
+    if (!citiesListContent.is(e.target) && citiesListContent.has(e.target).length === 0) 
+    {
+        citiesListContent.hide();
+    }
+
+});
 $(document).ready(function () {
 
     $('.reset-search').on('click', function() {
@@ -11,7 +20,7 @@ $(document).ready(function () {
 
     var is_timeout = false;
 
-    $('#cityInput').on('input', function() {
+    $('#cityInput').on('keyup', function() {
         var _this = $(this);
         if(is_timeout){
             clearTimeout(is_timeout);
