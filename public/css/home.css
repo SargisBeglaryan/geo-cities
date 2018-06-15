@@ -6,6 +6,28 @@
   height: 400px;
   width: 100%;
   background-color: grey;
-  display: none;
   margin-top: 40px;
+}
+
+#allCountriesList {
+	max-height: 216px;
+	overflow-y: auto;
+	border-bottom: 1px solid #d3e0e9;
+	display:none;
+}
+
+#allCountriesList li.list-group-item, .reset-search {
+	cursor: pointer;
+}
+
+.reset-search {
+	pointer-events: auto;
+}
+
+#allCountriesList li.list-group-item:hover {
+	color: #000 !important;
+}
+
+.searchCityContent {
+	margin-top: 30px;
 }

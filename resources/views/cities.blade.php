@@ -9,19 +9,21 @@
 @section('head')
  	<link rel="stylesheet" href="{{asset('css/home.css')}}" type="text/css">
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 @endsection
 
 @section('content')
 	<div class="container">
-		<div class="col-sm-12 margin-xs">
-			<select class="form-control selectpicker" id="select-country" data-live-search="true">
-				<option selected disabled >Choose your city</option>
-				@foreach($allCities as $cities)
-				<option data-longitude="{{ $cities->longitude }}" data-id="{{ $cities->id }}" data-latitude="{{ $cities->latitude }}" data-tokens="{{ $cities->name }}">{{ $cities->name }}</option>
-				@endforeach
-			</select>
+		<div class="col-sm-12">
+			<div class="searchCityContent">
+				<div class="form-group has-feedback">
+					{{-- {{ Form::text('cityInput', null, ['class' => 'form-control', 'placeholder'=> 'Search your city', 'id'=>'cityInput']) }} --}}
+					<label for="cityInput">Search for near 20 locations(cities)</label>
+					<input type="text" class="form-control" id="cityInput" placeholder="Search your city">
+					<span class="reset-search glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+					{{-- need to run npm intall, npm run production --}}
+					<ul id="allCountriesList" class="list-group"></ul>
+				</div>
+			</div>
 		</div>
 		<div class="col-sm-12">
 			<div id="map"></div>
@@ -30,7 +32,7 @@
 @endsection
 
 @section('script')
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgBy_DHNpUMeEMYPlN7hrtpzCNZQ8sFDI&libraries=places"
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgBy_DHNpUMeEMYPlN7hrtpzCNZQ8sFDI&libraries=places&callback=initMap"
         async defer></script>
     <script src="{{asset('js/home.js')}}"></script>
 @endsection

@@ -15,7 +15,7 @@ class CreateCitiesTable extends Migration
     {
         Schema::create('cities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 200);
+            $table->string('name', 100);
             $table->string('asciiname', 200)->nullable();
             $table->text('alternatenames')->nullable();
             // convenience attribute from alternatename table, varchar(10000)

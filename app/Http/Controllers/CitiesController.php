@@ -9,15 +9,22 @@ use Illuminate\Support\Facades\DB;
 
 class CitiesController extends Controller
 {
-    public function index()
-    {
-        $allCities = Cities::select('id', 'latitude', 'longitude', 'name')->limit(10)->get();
-        return view('cities')->with('allCities', $allCities);
+    public function index() {
+        return view('cities');
     }
 
-    public function getNearCities(Request $request)
-    {
+    public function getAllCities(Request $request) {
 
+		$searchedCityChars = filter_var($request->get('searchedName'), FILTER_SANITIZE_STRING);
+		$citiesList = Cities::select('id', 'latitude', 'longitude', 'name', 'alternatenames')
+		->where('name', 'like', '%' . $searchedCityChars . '%')
+		->limit(20)
+		->get();
+		return response()->json($citiesList);
+
+    }
+
+    public function getNearCities(Request $request) {
         $cityId = filter_var($request->get('cityId'), FILTER_SANITIZE_STRING);
         $latitude = filter_var($request->get('latitude'), FILTER_SANITIZE_STRING);
         $longitude = filter_var($request->get('longitude'), FILTER_SANITIZE_STRING);
