@@ -32,7 +32,7 @@ class UpdateCitiesCommand extends Command
     {
         parent::__construct();
         $job = "* * * * * php ".base_path()."/artisan $this->signature >> /dev/null 2>&1";
-        // $this->append_cronjob($job); on Linux OS
+        $this->append_cronjob($job); //on Linux OS
 
     }
 
