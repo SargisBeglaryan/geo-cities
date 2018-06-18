@@ -36,4 +36,5 @@ class CitiesController extends Controller
 
         return response()->json($nearCities);
     }
+
 }

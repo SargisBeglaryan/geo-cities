@@ -14,4 +14,3 @@
 Route::get('/', 'CitiesController@index')->name('cities-home');
 Route::post('/near-cities', 'CitiesController@getNearCities')->name('getNearCities');
 Route::post('/get-all-cities', 'CitiesController@getAllCities')->name('getAllCityes');
-Route::get('/test', 'CitiesController@test')->name('test');

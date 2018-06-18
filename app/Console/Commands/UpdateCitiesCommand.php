@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use \App\Cities as Cities;
+use \App\External_File as ExternalFile;
 use Illuminate\Support\Facades\DB;
 use Zip;
 
@@ -43,53 +44,48 @@ class UpdateCitiesCommand extends Command
      */
     public function handle()
     {
+
         $file = "http://download.geonames.org/export/dump/RU.zip";
-        $newfile = 'cities.zip';
+        $curl = curl_init();
 
-        if (!copy($file, $newfile)) {
-            $this->info("failed to copy ...");
-        }
-        $zip = Zip::open($newfile);
-        if ($zip) {
-            $lastCityId = Cities::select('id')->orderBy('id', 'desc')->first();
-            $zip->extract(public_path(), 'RU.txt');
-            ini_set('memory_limit', '-1');
-            $file = fopen(public_path('RU.txt'), "r");
-            $cursor = -1;
-            fseek($file, $cursor, SEEK_END);
-            $char = fgetc($file);
-            $lastLine = '';
-            while ($char === "\n" || $char === "\r") {
-                fseek($file, $cursor--, SEEK_END);
-                $char = fgetc($file);
-            }
+        curl_setopt($curl, CURLOPT_URL, $file);
+        curl_setopt($curl, CURLOPT_NOBODY, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FILETIME, true);
 
-            while ($char !== false && $char !== "\n" && $char !== "\r") {
-                $lastLine = $char . $lastLine;
-                fseek($file, $cursor--, SEEK_END);
-                $char = fgetc($file);
+        $result = curl_exec($curl);
+        $info = curl_getinfo($curl);
+
+        $lastModifedData = ExternalFile::select('last_modified')->orderBy('id', 'desc')->first();
+
+        if(!isset($lastModifedData) || date ('Y-m-d H:i:s', $info['filetime']) != $lastModifedData->last_modified) {
+            $newfile = 'cities.zip';
+            if (!copy($file, $newfile)) {
+                $this->info("failed to copy ...");
+                return false;
             }
-            $filePath = str_replace("\\", "/" , public_path('RU.txt'));
-            $checkLastCity = explode("\t",$lastLine);
-            if (!isset($lastCityId) || $checkLastCity[0] != $lastCityId->id) {
+            $zip = Zip::open($newfile);
+
+            if ($zip) {
+                $zip->extract(public_path(), 'RU.txt');
+                ini_set('memory_limit', '-1');
+                $filePath = str_replace("\\", "/" , public_path('RU.txt'));
+
                 $pdo = DB::connection()->getPdo();
                 $pdo->exec("LOAD DATA LOCAL INFILE '".$filePath."'
                 IGNORE INTO TABLE cities
                 FIELDS TERMINATED BY '\t'
                 LINES TERMINATED BY '\n' STARTING BY ''");
+
+                ExternalFile::insert(['last_modified' => date ('Y-m-d H:i:s', $info['filetime'])]);
+
                 $this->info('Table was updated successfully!');
+                $zip->close();
             }
-            if (is_file(public_path('RU.txt'))) {
-                @unlink(public_path('RU.txt'));
-            }
-            if (is_file(public_path($newfile))) {
-                @unlink(public_path($newfile));
-            }
-            fclose($file);
-            $zip->close();
+        } else {
+            $this->info('File not have updates!');
         }
-        $this->info('User checked Successfully!');
-        error_log("CronJob is working");
     }
 
     public function cronjob_exists($command){
